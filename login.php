@@ -1,10 +1,10 @@
 <?php
-	include("db.php");
+	include("conexao.php");
 
 	if (isset($_POST['entrar'])) {
 		$email = $_POST['email'];
 		$pass = $_POST['pass'];
-		$verifica = mysqli_query("SELECT * FROM usuarios WHERE email = '$email' AND password='$pass'");
+		$verifica = mysqli_query($conexao_livros, "SELECT * FROM usuarios WHERE email = '$email' AND password='$pass'");
 		if (mysqli_num_rows($verifica)<=0) {
 			echo "<h3>Senha ou e-mail errados!</h3>";
 		}else{
