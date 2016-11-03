@@ -30,6 +30,7 @@ CREATE TABLE `livros` (
   `id` int(11) NOT NULL,
   `titulo` varchar(250) NOT NULL,
   `autor` varchar(250) NOT NULL,
+  `usuario` int(11) NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --

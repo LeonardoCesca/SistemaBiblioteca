@@ -8,8 +8,11 @@
 		if (mysqli_num_rows($verifica)<=0) {
 			echo "<h3>Senha ou e-mail errados!</h3>";
 		}else{
-			setcookie("login",$email);
-			header("location:login.php");
+			$resultado = mysqli_fetch_array($verifica);
+			session_start();
+			$_SESSION['usuario_id'] = $resultado['id'];
+			$_SESSION['usuario_nome'] = $resultado['nome'];
+			header("location:buscar.php");
 		}
 	}
 ?>

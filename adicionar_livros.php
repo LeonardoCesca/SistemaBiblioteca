@@ -1,4 +1,5 @@
 <?php
+	require_once 'autenticacao.php';
 	include_once("conexao.php");
 	session_start();
 ?>
@@ -20,19 +21,33 @@
 				if($_SERVER['REQUEST_METHOD']=='POST'){
 					$request = md5(implode($_POST));
 					if(isset($_SESSION['ultima_request']) && $_SESSION['ultima_request'] == $request){
-						echo "Livro Existente!";
+						echo "<script>alert(\"Livro Existente!\")</script>";
 					}else{
 						$_SESSION['ultima_request'] = $request;
 						$titulo = $_POST['titulo'];
 						$autor = $_POST['autor'];
-						$_SESSION['titulo'] = $titulo;
-						$_SESSION['autor'] = $autor;
-						$result_adiciona_livros = "INSERT INTO livros (titulo, autor) VALUES ('$titulo', '$autor')";
+						$id = $_POST['id'];
+						if(empty($_POST['id']){
+							$result_adiciona_livros = "INSERT INTO livros (titulo, autor, usuario) VALUES ('$titulo', '$autor', $_SESSION[usuario_id])";
+						}else{
+							$result_adiciona_livros = "UPDATE livros SET titulo = '$titulo', autor = '$autor' WHERE id = $id";
+						}
 						$resultado_adiciona_livros = mysqli_query($conexao_livros, $result_adiciona_livros);
 						//ID DO LIVRO INSERIDO
 						$ultimo_id = mysqli_insert_id($conexao_livros);
-						echo "Livro inserido com Sucesso!"; 		
-			}
+						echo "<script>alert(\"Livro inserido com Sucesso!\")</script>";
+					}
+				}
+				if(isset($_GET['id']){
+					$queryEditar = "SELECT * FROM livros WHERE id = $_GET[id]";
+					$resultado_editar = mysqli_query($conexao_livros, $queryEditar);
+					$editar = mysqli_fetch_array($resultado_editar);
+				}else{
+					$editar = array(
+						'titulo' => '',
+						'autor' => '',
+						'id' => ''
+					);
 				}
 			?>
             <div>
@@ -57,17 +72,18 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Titulo</label>
                                 <div class="col-sm-10">
-                                    <input type="text" type="reset" name='titulo' class="form-control" id="titulo" placeholder="Titulo do Livro" value="<?php if(isset($_SESSION['titulo'])){ echo $_SESSION['titulo']; }?>">
+                                    <input type="text" type="reset" name='titulo' class="form-control" id="titulo" placeholder="Titulo do Livro" value="<?php echo $editar['titulo']; ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Autor</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name='autor' class="form-control" id="autor" placeholder="Autor do Livro" value="<?php if(isset($_SESSION['autor'])){ echo $_SESSION['autor']; } ?>">
+                                    <input type="text" name='autor' class="form-control" id="autor" placeholder="Autor do Livro" value="<?php echo $editar['autor']; ?>">
 								</div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
+									<input type="hidden" name="id" value="<?php echo $editar['id']; ?>">
                                     <button type="submit" class="btn btn-success">Cadastrar</button>
                                 </div>
                             </div>

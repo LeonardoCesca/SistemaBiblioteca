@@ -1,4 +1,5 @@
 <?php
+	require_once 'autenticacao.php';
 	include_once("conexao.php");
 
 	if(isset($_POST) && $_POST){
@@ -7,7 +8,8 @@
 	}else{
 		$busca = null;
 	}
-	$queryBusca = "SELECT * FROM livros WHERE titulo LIKE '%$busca%' OR autor LIKE '%$busca%'";
+	session_start();
+	$queryBusca = "SELECT * FROM livros WHERE titulo LIKE '%$busca%' OR autor LIKE '%$busca%' AND usuario = $_SESSION[usuario_id]";
 	$resultado_adiciona_livros = mysqli_query($conexao_livros, $queryBusca);
 	
 ?>
@@ -27,6 +29,7 @@
 </head>
 
 <body>
+	<a href="logout.php">Sair</a>
 	<div class="container theme-showcase" role="main">
 			<div class="page-header">
 				<h1>Livros</h1>
@@ -75,7 +78,7 @@
 											<td>".$resultado['autor']."</td>
 											<td>
 										<!--BOTAO DELETAR-->
-										<a href='deletar.php'</a>
+										<a class='btn btn-warning' href='adicionar_livros.php?id=".$resultado['id']."'>Editar</a>
 										<a class='btn btn-danger' href='deletar.php?id=".$resultado['id']."' onclick=\"return confirm('Tem certeza que deseja deletar esse registro?');\">Deletar</a>
 										</td>
 										</tr>";
